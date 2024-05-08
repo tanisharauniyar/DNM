@@ -40,7 +40,6 @@ class MyApp extends StatelessWidget {
       ),
       child: ProviderScope(
         child: MaterialApp(
-          //color: Colors.white,
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(

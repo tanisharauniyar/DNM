@@ -118,11 +118,13 @@ dependencies:
   # line chart
   fl_chart: ^0.63.0
   fl_animated_linechart: ^1.1.9
-
-
   motion_tab_bar: ^2.0.4
   awesome_bottom_bar: ^1.2.4
   image_picker: ^1.1.0
+  flutter_expandable_table: ^2.0.1
+  google_maps_flutter: ^2.6.1
+  location: ^6.0.2
+  flutter_polyline_points: ^2.0.0
 
 
 

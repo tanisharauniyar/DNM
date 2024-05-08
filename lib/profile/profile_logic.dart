@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:dnmm/Custom_table/dataSource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +15,7 @@ class ProfileLogic extends ChangeNotifier {
   String selectedReportType = 'Today';
   final ImagePicker _imagePicker = ImagePicker();
   File? image;
-  Uint8List? images;
+  // Uint8List? images;
   bool isSelected = true;
 
   setGrouping() {

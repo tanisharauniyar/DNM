@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../utills/themes.dart';
 import 'dashboard_logic.dart';
+import 'dashboard_logic.dart';
+import 'dashboard_logic.dart';
 
 class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({super.key});
@@ -20,13 +22,15 @@ class _DashboardState extends ConsumerState<Dashboard> {
       child: Container(
         color: Colors.white,
         child: Scaffold(
-            backgroundColor: Themes.backgroundColour,
+            backgroundColor: Themes.defaultGreenColor.withOpacity(0.4),
+            //backgroundColor: Themes.darkGreenHeader,
             appBar: AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: Themes.darkGreenHeader,
+              centerTitle: true,
               title: Text(
                 "Distirbution",
-                style: TextStyle(color: Colors.white, fontSize: 55.r),
+                style: TextStyle(color: Colors.white, fontSize: 65.r),
               ),
               actions: [
                 InkWell(
@@ -34,28 +38,27 @@ class _DashboardState extends ConsumerState<Dashboard> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(
-                      Icons.import_contacts_sharp,
-                      size: 58.r,
+                      Icons.message_outlined,
+                      size: 60.r,
                     ),
                   ),
                 )
               ],
             ),
             body: Padding(
-              padding: EdgeInsets.symmetric(vertical: 40.r),
+              padding: EdgeInsets.symmetric(vertical: 5.r),
               child: InkWell(
                 onTap: () {},
                 child: GridView.builder(
                   padding:
-                      EdgeInsets.symmetric(vertical: 15.h, horizontal: 30.r),
+                      EdgeInsets.symmetric(vertical: 1.h, horizontal: 10.r),
                   physics: BouncingScrollPhysics(),
                   itemCount: ref.watch(dashboardLogic).dataList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 50.r,
-                    mainAxisSpacing: 50.r,
-                    childAspectRatio: 11 / 12,
-                  ),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.r,
+                      mainAxisSpacing: 10.r,
+                      childAspectRatio: 300 / 340),
                   itemBuilder: (BuildContext context, int index) {
                     return buildCategoryItemsTile(
                         icon: ref.watch(dashboardLogic).dataList[index].icon,
@@ -100,50 +103,100 @@ class _DashboardState extends ConsumerState<Dashboard> {
   }) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => route));
+        if (ref.watch(dashboardLogic).titlesToShowDialog.contains(title)) {
+          //showDialogBox(ontap: , ontapp: );
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => route));
+        }
       },
-      child: Container(
-        padding: EdgeInsets.all(30.sp),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(45.r),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                offset: Offset(3, 3),
-                blurRadius: 5,
-                spreadRadius: 1
-                // inset: true,
+      child: Padding(
+        padding: EdgeInsets.all(20.r),
+        child: Container(
+          padding: EdgeInsets.all(40.r),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(45.r),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: Offset(4, 5),
+                  blurRadius: 4,
+                  spreadRadius: 1),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Icon(
+                    icon,
+                    size: 200.r,
+                    color: Themes.darkPrimaryColor,
+                  ),
                 ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-                child: Icon(
-              icon,
-              size: 200.r,
-              color: Colors.green,
-            )),
-            100.verticalSpace,
-            Expanded(
-              child: Text(
-                title ?? '',
-                style: TextStyle(
-                  fontSize: 40.r,
-                  color: Colors.black,
-                  overflow: TextOverflow.clip,
-                  fontWeight: FontWeight.w700,
+                140.verticalSpace,
+                Expanded(
+                  child: Text(
+                    title ?? '',
+                    style: TextStyle(
+                      fontSize: 40.r,
+                      color: Themes.darkPrimaryColor,
+                      overflow: TextOverflow.clip,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    maxLines: 2,
+                  ),
                 ),
-                maxLines: 2,
-              ),
+                20.verticalSpace,
+              ],
             ),
-            20.verticalSpace,
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  showDialogBox({required Function ontap, required Function ontapp}) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Select Context'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.dangerous_outlined),
+                  title: const Text('Distributor'),
+                  onTap: () async {
+                    await ontap;
+                    // await ref
+                    //     .read(AddOutletLogic)
+                    //     .selectImages(ImageSource.camera);
+
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.outbond_outlined),
+                  title: const Text('OutLet'),
+                  onTap: () async {
+                    await ontapp;
+                    // await ref
+                    //     .read(AddOutletLogic)
+                    //     .selectImages(ImageSource.gallery);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -257,12 +257,14 @@ class _ProfileState extends ConsumerState<Profile> {
                       GridColumn(
                         columnName: 'Sales',
                         label: Center(
-                          child: Text(
-                            "Sales Target",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 60.r,
-                                fontWeight: FontWeight.bold),
+                          child: Center(
+                            child: Text(
+                              "Sales Target",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 60.r,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ),

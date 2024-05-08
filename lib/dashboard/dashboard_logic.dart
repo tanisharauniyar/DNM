@@ -1,9 +1,10 @@
-import 'package:dnmm/Login/login_view.dart';
 import 'package:dnmm/profile/profile.dart';
 import 'package:dnmm/update_visit/update_visit.dart';
-import 'package:dnmm/visit_plan/visit_plan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../Add_outlet/Add_outlet.dart';
+import '../Calibrate_location/calibrate_location.dart';
 
 class CategoryModel {
   String? name;
@@ -18,6 +19,15 @@ final dashboardLogic = ChangeNotifierProvider<ShowCaseLogic>((ref) {
 });
 
 class ShowCaseLogic extends ChangeNotifier {
+  final titlesToShowDialog = [
+    "Competitive Item",
+    "Collection",
+    "Calibrate Location",
+    "Monitoring",
+    "Movement Analysis",
+    "PO Status",
+    "Closing Stock",
+  ];
   List<CategoryModel> dataList = [
     CategoryModel(
       name: "Profile",
@@ -27,7 +37,6 @@ class ShowCaseLogic extends ChangeNotifier {
     CategoryModel(
       name: "Visit Plan",
       icon: Icons.pedal_bike,
-      route: VisitPlan(),
     ),
     CategoryModel(
       name: "Update Visit",
@@ -37,13 +46,14 @@ class ShowCaseLogic extends ChangeNotifier {
     CategoryModel(
       name: "Add Outlet",
       icon: Icons.pedal_bike,
+      route: AddOutlet(),
     ),
     CategoryModel(
       name: "Order Booking",
       icon: Icons.pedal_bike,
     ),
     CategoryModel(
-      name: "Sales Report",
+      name: "Sales Return",
       icon: Icons.pedal_bike,
     ),
     CategoryModel(
@@ -73,6 +83,7 @@ class ShowCaseLogic extends ChangeNotifier {
     CategoryModel(
       name: "Calibrate Location",
       icon: Icons.pedal_bike,
+      route: CalibrateLocation(),
     ),
     CategoryModel(
       name: "Collection",

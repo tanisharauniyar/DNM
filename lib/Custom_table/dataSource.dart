@@ -89,10 +89,7 @@ class ProdVsSalesData extends DataGridSource {
 
   @override
   String performGrouping(String columnName, DataGridRow row) {
-    // print(columnName);
     if (columnName == 'Sales') {
-      //print("testing");
-
       String headerValue = row
           .getCells()
           .firstWhere(
@@ -100,13 +97,8 @@ class ProdVsSalesData extends DataGridSource {
             orElse: () => DataGridCell<String>(columnName: '', value: ''),
           )
           .value;
-      print("headerValue");
-      print(headerValue);
-      print(productNames.contains(headerValue));
-      print("productNames.contains(headerValue)");
 
       if (productNames.contains(headerValue)) {
-        print(headerValue);
         return 'Product wise';
       } else if (areaNames.contains(headerValue)) {
         return 'Area wise';
