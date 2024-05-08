@@ -83,7 +83,7 @@ class ShowCaseLogic extends ChangeNotifier {
     CategoryModel(
       name: "Calibrate Location",
       icon: Icons.pedal_bike,
-      route: CalibrateLocation(),
+      // route: CalibrateLocation(),
     ),
     CategoryModel(
       name: "Collection",

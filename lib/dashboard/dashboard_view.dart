@@ -1,3 +1,6 @@
+import 'package:dnmm/Calibrate_location/calibrate_location.dart';
+import 'package:dnmm/Calibrate_location/distributor.dart';
+import 'package:dnmm/Calibrate_location/outlet.dart';
 import 'package:dnmm/Login/login_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +107,16 @@ class _DashboardState extends ConsumerState<Dashboard> {
     return InkWell(
       onTap: () {
         if (ref.watch(dashboardLogic).titlesToShowDialog.contains(title)) {
-          //showDialogBox(ontap: , ontapp: );
+          showDialogBox(
+            ontap: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => MapScreen()));
+            },
+            ontapp: () {
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Outlet()));
+            },
+          );
         } else {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => route));
@@ -170,28 +182,17 @@ class _DashboardState extends ConsumerState<Dashboard> {
             child: ListBody(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.dangerous_outlined),
-                  title: const Text('Distributor'),
-                  onTap: () async {
-                    await ontap;
-                    // await ref
-                    //     .read(AddOutletLogic)
-                    //     .selectImages(ImageSource.camera);
-
-                    Navigator.of(context).pop();
-                  },
-                ),
+                    leading: const Icon(Icons.dangerous_outlined),
+                    title: const Text('Distributor'),
+                    onTap: () {
+                      ontap();
+                    }),
                 ListTile(
-                  leading: Icon(Icons.outbond_outlined),
-                  title: const Text('OutLet'),
-                  onTap: () async {
-                    await ontapp;
-                    // await ref
-                    //     .read(AddOutletLogic)
-                    //     .selectImages(ImageSource.gallery);
-                    Navigator.of(context).pop();
-                  },
-                ),
+                    leading: const Icon(Icons.outbond_outlined),
+                    title: const Text('OutLet'),
+                    onTap: () {
+                      ontapp();
+                    }),
               ],
             ),
           ),
