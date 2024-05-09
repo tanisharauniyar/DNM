@@ -14,16 +14,16 @@ class CalibrateLocationLogic extends ChangeNotifier {
   String? locationMessage;
 
   location() {
+    livelocation();
+    notifyListeners();
     getCurrentLocation().then(
       (value) {
         lat = "${value.latitude}";
         long = "${value.longitude}";
         locationMessage = 'Latitude: $lat , logitude:$long';
+        notifyListeners();
       },
     );
-    livelocation();
-
-    notifyListeners();
   }
 
   Future<Position> getCurrentLocation() async {
@@ -37,6 +37,7 @@ class CalibrateLocationLogic extends ChangeNotifier {
       if (permission == LocationPermission.denied) {
         return Future.error("Location permission are denied ");
       }
+      notifyListeners();
     }
     if (permission == LocationPermission.deniedForever) {
       return Future.error(
@@ -54,9 +55,13 @@ class CalibrateLocationLogic extends ChangeNotifier {
         .listen((Position position) {
       lat = position.latitude.toString();
       long = position.longitude.toString();
+      print("--------------------------------------");
+      print(position.latitude.toString());
+      print(position.longitude.toString());
+      print("--------------------------------------");
       locationMessage = 'Latitude: $lat , logitude:$long';
+      notifyListeners();
     });
-    notifyListeners();
   }
 
   openmap(String lat, String long) async {
