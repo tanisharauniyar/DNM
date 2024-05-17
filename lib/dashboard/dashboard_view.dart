@@ -1,14 +1,9 @@
-import 'package:dnmm/Calibrate_location/calibrate_location.dart';
-import 'package:dnmm/Calibrate_location/distributor.dart';
-import 'package:dnmm/Calibrate_location/outlet.dart';
 import 'package:dnmm/Login/login_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../utills/themes.dart';
-import 'dashboard_logic.dart';
-import 'dashboard_logic.dart';
 import 'dashboard_logic.dart';
 
 class Dashboard extends ConsumerStatefulWidget {
@@ -19,6 +14,8 @@ class Dashboard extends ConsumerStatefulWidget {
 }
 
 class _DashboardState extends ConsumerState<Dashboard> {
+  String? selectedMarketingRepresentative;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -106,15 +103,22 @@ class _DashboardState extends ConsumerState<Dashboard> {
   }) {
     return InkWell(
       onTap: () {
-        if (ref.watch(dashboardLogic).titlesToShowDialog.contains(title)) {
+        final dialogRoutes =
+            ref.watch(dashboardLogic).titlesToShowDialog[title];
+        if (dialogRoutes != null) {
           showDialogBox(
             ontap: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MapScreen()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => dialogRoutes!['Distributor']!,
+                  ));
             },
             ontapp: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Outlet()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => dialogRoutes['Outlet']!));
             },
           );
         } else {
@@ -172,24 +176,56 @@ class _DashboardState extends ConsumerState<Dashboard> {
     );
   }
 
-  showDialogBox({required Function ontap, required Function ontapp}) {
+  showDialogBox({
+    required Function ontap,
+    required Function ontapp,
+  }) {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Select Context'),
+          title: Text(
+            'Select Context',
+            style: TextStyle(
+              fontSize: 70.r,
+              fontWeight: FontWeight.bold,
+              color: Themes.darkGreenHeader,
+            ),
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: [
                 ListTile(
-                    leading: const Icon(Icons.dangerous_outlined),
-                    title: const Text('Distributor'),
+                    leading: Icon(
+                      Icons.dangerous_outlined,
+                      size: 100.r,
+                      color: Themes.primaryColor,
+                    ),
+                    title: Text(
+                      'Distributor',
+                      style: TextStyle(
+                        fontSize: 70.r,
+                        fontWeight: FontWeight.bold,
+                        color: Themes.darkPrimaryColor,
+                      ),
+                    ),
                     onTap: () {
                       ontap();
                     }),
                 ListTile(
-                    leading: const Icon(Icons.outbond_outlined),
-                    title: const Text('OutLet'),
+                    leading: Icon(
+                      Icons.outbond_outlined,
+                      size: 100.r,
+                      color: Themes.primaryColor,
+                    ),
+                    title: Text(
+                      'OutLet',
+                      style: TextStyle(
+                        fontSize: 70.r,
+                        fontWeight: FontWeight.bold,
+                        color: Themes.darkPrimaryColor,
+                      ),
+                    ),
                     onTap: () {
                       ontapp();
                     }),

@@ -27,6 +27,8 @@ class addoutletLogic extends ChangeNotifier {
   var PrimaryContactName = TextEditingController();
   var Designation = TextEditingController();
 
+  List popupContainers = [];
+
   List<String> groups = [
     'Kathmandu',
     'bhaktapur',
@@ -54,7 +56,7 @@ class addoutletLogic extends ChangeNotifier {
   }
 
   setGender(String? gender) {
-    selectedGroup = gender;
+    selectGender = gender;
     notifyListeners();
   }
 
@@ -111,6 +113,13 @@ class addoutletLogic extends ChangeNotifier {
   selectprimaricontacImages(ImageSource source) async {
     XFile imge = await pickImage(source);
     primarycontactimage = await File(imge.path);
+    notifyListeners();
+  }
+
+  hidePopupContainer() {
+    if (popupContainers.isNotEmpty) {
+      popupContainers.removeLast();
+    }
     notifyListeners();
   }
 }

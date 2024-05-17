@@ -12,10 +12,10 @@ class CalibrateLocationLogic extends ChangeNotifier {
   String? lat;
   String? long;
   String? locationMessage;
+  // final locationController = Location();
 
   location() {
     livelocation();
-    notifyListeners();
     getCurrentLocation().then(
       (value) {
         lat = "${value.latitude}";
@@ -29,7 +29,7 @@ class CalibrateLocationLogic extends ChangeNotifier {
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error("Location servuce are disabled.");
+      return Future.error("Location service are disabled.");
     }
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {

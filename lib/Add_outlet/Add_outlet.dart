@@ -24,29 +24,29 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back_ios_new,
-              size: 60.r,
-              color: Colors.white,
+      child: Container(
+        color: Colors.white,
+        child: Scaffold(
+          backgroundColor: Themes.defaultGreenColor.withOpacity(0.4),
+          appBar: AppBar(
+            leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                size: 60.r,
+                color: Colors.white,
+              ),
+            ),
+            centerTitle: true,
+            backgroundColor: Themes.darkGreenHeader,
+            title: Text(
+              "Add Outlet",
+              style: TextStyle(color: Colors.white, fontSize: 65.r),
             ),
           ),
-          centerTitle: true,
-          backgroundColor: Themes.darkGreenHeader,
-          title: Text(
-            "Add Outlet",
-            style: TextStyle(color: Colors.white, fontSize: 65.r),
-          ),
-        ),
-        body: Container(
-          color: Themes.defaultGreenColor.withOpacity(0.4),
-          child: SingleChildScrollView(
+          body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Form(
               key: formKey,
@@ -158,7 +158,9 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                           Radius.circular(40.r),
                         ),
                       ),
-                      child: Column(
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         children: [
                           CustomDropdown(
                             text: 'Outlet Group',
@@ -207,9 +209,9 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                                   child: Center(
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownButtonFormField<String>(
-                                        value: ref
-                                            .watch(AddOutletLogic)
-                                            .selectGender,
+                                        // value: ref
+                                        //     .watch(AddOutletLogic)
+                                        //     .selectGender,
                                         decoration: const InputDecoration(
                                             border: InputBorder.none),
                                         items: ref
@@ -217,7 +219,7 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                                             .Genderoptions
                                             .map((val) {
                                           return DropdownMenuItem<String>(
-                                            value: val.toString(),
+                                            value: val,
                                             child: Text(
                                               val.toString(),
                                               style: TextStyle(
@@ -227,6 +229,7 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                                           );
                                         }).toList(),
                                         onChanged: (newValuee) {
+                                          print(newValuee);
                                           ref
                                               .read(AddOutletLogic)
                                               .setGender(newValuee);
@@ -237,38 +240,47 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                                 ),
                               ),
                               //20.horizontalSpace,
-                              textfield(
-                                controller1:
-                                    ref.read(AddOutletLogic).PrimaryContactName,
-                                text: "primary contact name ",
-                                iconn: Icons.add_a_photo,
+                              Expanded(
+                                child: textfield(
+                                  controller1: ref
+                                      .read(AddOutletLogic)
+                                      .PrimaryContactName,
+                                  text: "primary contact name ",
+                                  iconn: Icons.add_a_photo,
+                                ),
                               ),
                             ],
                           ),
                           30.verticalSpace,
                           if (ref.watch(AddOutletLogic).primarycontactimage !=
                               null)
-                            Container(
-                                height: 220.h,
-                                width: 230.w,
-                                color: Colors.black.withOpacity(0.1),
-                                child: Image.file(
-                                  ref
-                                          .watch(AddOutletLogic)
-                                          .primarycontactimage ??
-                                      File(""),
-                                  fit: BoxFit.cover,
-                                )),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20.h, horizontal: 390.w),
+                              child: Container(
+                                  height: 240.h,
+                                  width: 230.w,
+                                  color: Colors.black.withOpacity(0.1),
+                                  child: Image.file(
+                                    ref
+                                            .watch(AddOutletLogic)
+                                            .primarycontactimage ??
+                                        File(""),
+                                    fit: BoxFit.cover,
+                                  )),
+                            ),
                           30.verticalSpace,
-                          // textfield(
-                          //   controller1: ref.read(AddOutletLogic).Designation,
-                          //   text: "Designation",
-                          // ),
-                          // textfield(
-                          //   controller1: ref.read(AddOutletLogic).Designation,
-                          //   text: "Primary Contact Number",
-                          //   keyboardType: TextInputType.phone,
-                          // ),
+                          textfield(
+                            controller1: ref.read(AddOutletLogic).Designation,
+                            text: "Designation",
+                          ),
+                          30.verticalSpace,
+                          textfield(
+                            controller1: ref.read(AddOutletLogic).Designation,
+                            text: "Primary Contact Number",
+                            keyboardType: TextInputType.phone,
+                          ),
+                          30.verticalSpace,
                         ],
                       ),
                     ),
@@ -302,6 +314,14 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
               ),
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                showPopupContainer();
+              },
+              backgroundColor: Themes.defaultGreenColor,
+              child: const Icon(
+                Icons.add,
+              )),
         ),
       ),
     );
@@ -325,13 +345,12 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
           decoration: BoxDecoration(
             border: Border.all(
               color: Themes.darkPrimaryColor,
+              width: 5.r,
             ),
-            //color: Themes.defaultGreenColor.withOpacity(0.4),
-            color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20.r)),
           ),
           child: Padding(
-            padding: EdgeInsets.all(50.r),
+            padding: EdgeInsets.all(30.r),
             child: Text(
               text!,
               style: TextStyle(
@@ -351,40 +370,45 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
     IconData? iconn,
     TextInputType? keyboardType,
   }) {
-    return Expanded(
-      //  flex: 2,
-      child: Padding(
-        padding: EdgeInsets.only(left: 250.r, right: 60.r),
-        child: SizedBox(
-          height: 130.r,
-          width: 900.w,
-          child: TextField(
-            keyboardType: keyboardType,
-            controller: controller1,
-            decoration: InputDecoration(
-              hintText: text,
-              suffixIcon: iconn != null
-                  ? InkWell(
-                      onTap: () {
-                        showDialogBox(
-                            ontap: ref
-                                .read(AddOutletLogic)
-                                .selectprimaricontacImages(ImageSource.camera),
-                            ontapp: ref
-                                .read(AddOutletLogic)
-                                .selectprimaricontacImages(
-                                    ImageSource.gallery));
-                      },
-                      child: Icon(
-                        iconn,
-                        color: Themes.darkGreenHeader,
-                        size: 58.r,
-                      ),
-                    )
-                  : null,
-              border: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
-              ),
+    return Padding(
+      padding: EdgeInsets.only(left: 250.r, right: 60.r),
+      child: Container(
+        height: 130.r,
+        width: 900.w,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Themes.darkPrimaryColor,
+              width: 5.r,
+            ),
+          ),
+          // borderRadius: BorderRadius.circular(.r),
+        ),
+        child: TextField(
+          keyboardType: keyboardType,
+          controller: controller1,
+          decoration: InputDecoration(
+            hintText: text,
+            suffixIcon: iconn != null
+                ? InkWell(
+                    onTap: () {
+                      showDialogBox(
+                          ontap: ref
+                              .read(AddOutletLogic)
+                              .selectprimaricontacImages(ImageSource.camera),
+                          ontapp: ref
+                              .read(AddOutletLogic)
+                              .selectprimaricontacImages(ImageSource.gallery));
+                    },
+                    child: Icon(
+                      iconn,
+                      color: Themes.darkGreenHeader,
+                      size: 58.r,
+                    ),
+                  )
+                : null,
+            border: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
             ),
           ),
         ),
@@ -404,18 +428,15 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.r),
       child: Container(
-        height: 130.r,
-        //width: 900.w,
+        margin: EdgeInsets.symmetric(horizontal: 30.sp),
         decoration: BoxDecoration(
           border: Border.all(
             color: Themes.darkPrimaryColor,
+            width: 5.r,
           ),
-          //color: Themes.defaultGreenColor.withOpacity(0.4),
-          borderRadius: BorderRadius.all(
-            (Radius.circular(20.r)),
-          ),
+          borderRadius: BorderRadius.circular(20.r),
         ),
-        margin: EdgeInsets.symmetric(horizontal: 30.sp),
+        height: 130.r,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -493,15 +514,19 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                 border: Border.all(
                   color: ref.watch(AddOutletLogic).ischecked
                       ? Themes.darkGreenHeader
-                      : Colors.black,
+                      : Themes.darkPrimaryColor,
+                  width: 5.r,
                 ),
                 color: ref.watch(AddOutletLogic).ischecked
                     ? Themes.darkGreenHeader
                     : Colors.white),
-            child: Icon(Icons.check,
-                color: ref.watch(AddOutletLogic).ischecked
-                    ? Colors.white
-                    : Colors.white),
+            child: Icon(
+              Icons.check,
+              size: 60.r,
+              color: ref.watch(AddOutletLogic).ischecked
+                  ? Colors.white
+                  : Colors.white,
+            ),
           ),
         ),
       ],
@@ -529,16 +554,16 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
         ),
         30.horizontalSpace,
         Expanded(
-          //flex: 16,
           child: Padding(
-            padding: EdgeInsets.only(left: 30.r, right: 30.r, top: 20.r),
+            padding: EdgeInsets.only(left: 70.r, right: 30.r, top: 20.r),
             child: Container(
               height: 130.r,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  (Radius.circular(20.r)),
+                border: Border.all(
+                  color: Themes.darkPrimaryColor,
+                  width: 5.r,
                 ),
-                color: Color(0xffE7ECEF),
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Center(
                 child: Padding(
@@ -554,6 +579,7 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                       value: value,
                       decoration: InputDecoration(border: InputBorder.none),
                       items: items.map((val) {
+                        print(val);
                         return DropdownMenuItem<String>(
                           value: val.toString(),
                           child: Text(
@@ -581,30 +607,53 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Choose an option'),
+          title: Text(
+            'Choose an option',
+            style: TextStyle(
+              fontSize: 70.r,
+              fontWeight: FontWeight.bold,
+              color: Themes.darkGreenHeader,
+            ),
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.camera),
-                  title: const Text('Distributor'),
+                  leading: Icon(
+                    Icons.camera,
+                    size: 100.r,
+                    color: Themes.primaryColor,
+                  ),
+                  title: Text(
+                    'Distributor',
+                    style: TextStyle(
+                      fontSize: 70.r,
+                      fontWeight: FontWeight.bold,
+                      color: Themes.darkPrimaryColor,
+                    ),
+                  ),
                   onTap: () async {
                     await ontap;
-                    // await ref
-                    //     .read(AddOutletLogic)
-                    //     .selectImages(ImageSource.camera);
 
                     Navigator.of(context).pop();
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.photo_library),
-                  title: const Text('Outlet'),
+                  leading: Icon(
+                    Icons.photo_library,
+                    size: 100.r,
+                    color: Themes.primaryColor,
+                  ),
+                  title: Text(
+                    'Outlet',
+                    style: TextStyle(
+                      fontSize: 70.r,
+                      fontWeight: FontWeight.bold,
+                      color: Themes.darkPrimaryColor,
+                    ),
+                  ),
                   onTap: () async {
                     await ontapp;
-                    // await ref
-                    //     .read(AddOutletLogic)
-                    //     .selectImages(ImageSource.gallery);
                     Navigator.of(context).pop();
                   },
                 ),
@@ -614,5 +663,33 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
         );
       },
     );
+  }
+
+  showPopupContainer() {
+    setState(() {
+      ref.watch(AddOutletLogic).popupContainers.add(
+            Positioned(
+              bottom: 200.h,
+              left: 30.w,
+              child: Container(
+                width: 300.w,
+                height: 200.h,
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Your Content Here"),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.watch(AddOutletLogic).hidePopupContainer();
+                      },
+                      child: Text("Cancel"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+    });
   }
 }

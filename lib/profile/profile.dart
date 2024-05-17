@@ -38,8 +38,9 @@ class _ProfileState extends ConsumerState<Profile> {
       child: Container(
         color: Colors.white,
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Themes.lightGreen.withOpacity(0.1),
           appBar: AppBar(
+            centerTitle: true,
             leading: InkWell(
               onTap: () {
                 Navigator.pop(context);
