@@ -69,9 +69,16 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 35.r),
                     child: Container(
-                      height: 870.h,
-                      // width: ,
+                      height: 900.h,
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5.r),
+                            spreadRadius: 10.r,
+                            blurRadius: 10.r,
+                            offset: Offset(3, 2),
+                          )
+                        ],
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(40.r)),
                       ),
@@ -143,16 +150,25 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                                 builder: (context) => SelectDistributor(),
                               ),
                             ),
+                            30.verticalSpace,
                           ],
                         ),
                       ),
                     ),
                   ),
-                  40.verticalSpace,
+                  30.verticalSpace,
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 35.r),
                     child: Container(
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5.r),
+                            spreadRadius: 10.r,
+                            blurRadius: 10.r,
+                            offset: Offset(3, 2),
+                          )
+                        ],
                         color: Colors.white,
                         borderRadius: BorderRadius.all(
                           Radius.circular(40.r),
@@ -209,9 +225,6 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                                   child: Center(
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownButtonFormField<String>(
-                                        // value: ref
-                                        //     .watch(AddOutletLogic)
-                                        //     .selectGender,
                                         decoration: const InputDecoration(
                                             border: InputBorder.none),
                                         items: ref
@@ -239,7 +252,7 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                                   ),
                                 ),
                               ),
-                              //20.horizontalSpace,
+                              150.horizontalSpace,
                               Expanded(
                                 child: textfield(
                                   controller1: ref
@@ -276,14 +289,24 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                           ),
                           30.verticalSpace,
                           textfield(
-                            controller1: ref.read(AddOutletLogic).Designation,
+                            controller1:
+                                ref.read(AddOutletLogic).primarycontacenumber,
                             text: "Primary Contact Number",
                             keyboardType: TextInputType.phone,
                           ),
-                          30.verticalSpace,
+                          50.verticalSpace,
                         ],
                       ),
                     ),
+                  ),
+                  20.verticalSpace,
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: ref.watch(AddOutletLogic).secContact.length,
+                    itemBuilder: (context, index) {
+                      return showPopupContainer(index);
+                    },
                   ),
                   30.verticalSpace,
                   InkWell(
@@ -315,19 +338,22 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                showPopupContainer();
-              },
-              backgroundColor: Themes.defaultGreenColor,
-              child: const Icon(
-                Icons.add,
-              )),
+            onPressed: () {
+              ref.watch(AddOutletLogic).addSecondary();
+              // showPopupContainer();
+              //ref.watch(AddOutletLogic).primaryContact;
+            },
+            backgroundColor: Themes.defaultGreenColor,
+            child: const Icon(
+              Icons.add,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Customcontainer(
+  Widget Customcontainer(
     String? text,
     PageRoute? route,
   ) {
@@ -343,11 +369,8 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
           height: 140.r,
           width: 1020.r,
           decoration: BoxDecoration(
-            border: Border.all(
-              color: Themes.darkPrimaryColor,
-              width: 5.r,
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(20.r)),
+            color: Themes.iconColor.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(20.r),
           ),
           child: Padding(
             padding: EdgeInsets.all(30.r),
@@ -364,29 +387,21 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
     );
   }
 
-  textfield({
-    TextEditingController? controller1,
-    String? text,
-    IconData? iconn,
-    TextInputType? keyboardType,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(left: 250.r, right: 60.r),
-      child: Container(
-        height: 130.r,
-        width: 900.w,
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Themes.darkPrimaryColor,
-              width: 5.r,
-            ),
-          ),
-          // borderRadius: BorderRadius.circular(.r),
-        ),
+  Widget textfield(
+      {TextEditingController? controller1,
+      String? text,
+      IconData? iconn,
+      TextInputType? keyboardType,
+      Function(String?)? Onchanged}) {
+    return Container(
+      height: 150.r,
+      width: 2000.w,
+      child: Padding(
+        padding: EdgeInsets.all(25.r),
         child: TextField(
           keyboardType: keyboardType,
           controller: controller1,
+          onChanged: Onchanged,
           decoration: InputDecoration(
             hintText: text,
             suffixIcon: iconn != null
@@ -407,16 +422,13 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                     ),
                   )
                 : null,
-            border: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-            ),
           ),
         ),
       ),
     );
   }
 
-  textFormField(String hintxt,
+  Widget textFormField(String hintxt,
       {TextEditingController? controller,
       String? Function(String?)? validator,
       bool text = false,
@@ -430,13 +442,10 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 30.sp),
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Themes.darkPrimaryColor,
-            width: 5.r,
-          ),
+          color: Themes.iconColor.withOpacity(0.2),
           borderRadius: BorderRadius.circular(20.r),
         ),
-        height: 130.r,
+        height: 150.r,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -514,7 +523,7 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
                 border: Border.all(
                   color: ref.watch(AddOutletLogic).ischecked
                       ? Themes.darkGreenHeader
-                      : Themes.darkPrimaryColor,
+                      : Themes.iconColor.withOpacity(0.3),
                   width: 5.r,
                 ),
                 color: ref.watch(AddOutletLogic).ischecked
@@ -559,10 +568,7 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
             child: Container(
               height: 130.r,
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: Themes.darkPrimaryColor,
-                  width: 5.r,
-                ),
+                color: Themes.iconColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Center(
@@ -665,31 +671,100 @@ class _AddOutletState extends ConsumerState<AddOutlet> {
     );
   }
 
-  showPopupContainer() {
-    setState(() {
-      ref.watch(AddOutletLogic).popupContainers.add(
-            Positioned(
-              bottom: 200.h,
-              left: 30.w,
-              child: Container(
-                width: 300.w,
-                height: 200.h,
-                color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Your Content Here"),
-                    ElevatedButton(
-                      onPressed: () {
-                        ref.watch(AddOutletLogic).hidePopupContainer();
-                      },
-                      child: Text("Cancel"),
-                    ),
-                  ],
+  Widget showPopupContainer(index) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 30.r),
+      child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 30.sp),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5.r),
+                spreadRadius: 10.r,
+                blurRadius: 10.r,
+                offset: Offset(3, 2),
+              )
+            ],
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          height: 700.r,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 800.r, top: 30.r),
+                child: InkWell(
+                  onTap: () {
+                    ref.watch(AddOutletLogic).hidePopupContainer(index);
+                  },
+                  child: Icon(
+                    Icons.cancel,
+                    size: 80.r,
+                    color: Colors.red,
+                  ),
                 ),
               ),
-            ),
-          );
-    });
+              20.verticalSpace,
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 30.r),
+                    child: Container(
+                      height: 70.h,
+                      width: 230.w,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      child: Center(
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButtonFormField<String>(
+                            decoration:
+                                const InputDecoration(border: InputBorder.none),
+                            items: ref.watch(AddOutletLogic).Gender.map((val) {
+                              return DropdownMenuItem<String>(
+                                value: val,
+                                child: Text(
+                                  val.toString(),
+                                  style: TextStyle(
+                                      fontSize: 40.r,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (newValuee) {
+                              print(newValuee);
+                              ref.read(AddOutletLogic).setGendername(newValuee);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  100.horizontalSpace,
+                  Expanded(
+                    child: textfield(
+                      controller1: ref.read(AddOutletLogic).secContact[index]
+                          ['name'],
+                      text: "Secondary contact name ",
+                    ),
+                  ),
+                ],
+              ),
+              textfield(
+                controller1: ref.read(AddOutletLogic).secContact[index]
+                    ['designation'],
+                text: "Designation ",
+              ),
+              textfield(
+                controller1: ref.read(AddOutletLogic).secContact[index]
+                    ['number'],
+                text: "Secondary contact number ",
+              ),
+              20.verticalSpace,
+            ],
+          )),
+    );
   }
 }

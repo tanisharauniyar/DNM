@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../Calibrate_location/outlet.dart';
+import '../utills/HorizontalTable.dart';
 import '../utills/themes.dart';
 import 'order_booking_logic.dart';
 
@@ -35,74 +35,56 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        color: Colors.white,
-        child: Scaffold(
-          //backgroundColor: Themes.lightGreen.withOpacity(0.1),
-          backgroundColor: Themes.defaultGreenColor.withOpacity(0.1),
-          appBar: AppBar(
-            leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_back_ios_new,
-                size: 60.r,
-                color: Colors.white,
-              ),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios_new,
+              size: 60.r,
+              color: Colors.white,
             ),
-            automaticallyImplyLeading: false,
-            backgroundColor: Themes.darkGreenHeader,
-            centerTitle: true,
-            title: Text(
-              "Order Booking",
-              style: TextStyle(color: Colors.white, fontSize: 65.r),
-            ),
-            actions: [
-              InkWell(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.save,
-                    size: 80.r,
-                  ),
-                ),
-              )
-            ],
           ),
-          body: Column(
+          automaticallyImplyLeading: false,
+          backgroundColor: Themes.darkGreenHeader,
+          centerTitle: true,
+          title: Text(
+            "Order Booking",
+            style: TextStyle(color: Colors.white, fontSize: 65.r),
+          ),
+          actions: [
+            InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.save,
+                  size: 80.r,
+                ),
+              ),
+            )
+          ],
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.r, vertical: 20.r),
+          child: Column(
             children: [
               50.verticalSpace,
               Row(
                 children: [
-                  customCheckBox(text: 'Dispatch From  : '),
-                  30.horizontalSpace,
-                  Text(
-                    "Wholeseller",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40.r,
-                      color: Themes.darkGreenHeader,
-                    ),
-                  )
-                ],
-              ),
-              if (!ref.watch(orderbookingLogic).ischecked) 10.verticalSpace,
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 30.r),
+                  Expanded(
+                    flex: 2,
                     child: Text(
-                      "Distributor ",
+                      "Dispatch From",
                       style: TextStyle(
+                        fontSize: 70.r,
                         color: Themes.darkGreenHeader,
                         fontWeight: FontWeight.bold,
-                        fontSize: 70.r,
                       ),
                     ),
                   ),
-                  85.horizontalSpace,
                   Padding(
                     padding: EdgeInsets.only(left: 30.r),
                     child: Text(
@@ -114,20 +96,61 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
                       ),
                     ),
                   ),
-                  20.horizontalSpace,
-                  customtextfield(
-                    text: 'Select Distributor',
-                    onUpdate: () {
-                      ref.watch(orderbookingLogic).checkBox();
-                    },
+
+                  Expanded(flex: 3, child: customCheckBox(text: 'Wholesaler')),
+                  // Expanded(
+                  //   child: Text(
+                  //     "Wholeseller",
+                  //     style: TextStyle(
+                  //       fontWeight: FontWeight.bold,
+                  //       fontSize: 40.r,
+                  //       color: Themes.darkGreenHeader,
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              ),
+              if (!ref.watch(orderbookingLogic).ischecked) 10.verticalSpace,
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      "Distributor ",
+                      style: TextStyle(
+                        color: Themes.darkGreenHeader,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 70.r,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30.r),
+                    child: Text(
+                      ":",
+                      style: TextStyle(
+                        color: Themes.darkGreenHeader,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 70.r,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: customtextfield(
+                      text: 'Select Distributor',
+                      onUpdate: () {
+                        ref.watch(orderbookingLogic).checkBox();
+                      },
+                    ),
                   ),
                 ],
               ),
               if (ref.watch(orderbookingLogic).ischecked)
                 Row(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 30.r),
+                    Expanded(
+                      flex: 2,
                       child: Text(
                         //widget.text,
                         "Wholeseller ",
@@ -138,7 +161,6 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
                         ),
                       ),
                     ),
-                    55.horizontalSpace,
                     Padding(
                       padding: EdgeInsets.only(left: 30.r),
                       child: Text(
@@ -151,18 +173,20 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
                         ),
                       ),
                     ),
-                    20.horizontalSpace,
-                    customtextfield(
-                      text: 'Select Wholeseller',
-                      onUpdate: () {},
+                    Expanded(
+                      flex: 3,
+                      child: customtextfield(
+                        text: 'Select Wholeseller',
+                        onUpdate: () {},
+                      ),
                     )
                   ],
                 ),
               10.verticalSpace,
               Row(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 30.r),
+                  Expanded(
+                    flex: 2,
                     child: Text(
                       "Remarks  ",
                       style: TextStyle(
@@ -172,7 +196,6 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
                       ),
                     ),
                   ),
-                  110.horizontalSpace,
                   Padding(
                     padding: EdgeInsets.only(left: 30.r),
                     child: Text(
@@ -185,9 +208,11 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
                       ),
                     ),
                   ),
-                  20.horizontalSpace,
-                  customtextfield(
-                    onUpdate: () {},
+                  Expanded(
+                    flex: 3,
+                    child: customtextfield(
+                      onUpdate: () {},
+                    ),
                   )
                 ],
               ),
@@ -222,12 +247,13 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
                 child: Container(
                   //width: 1050.h,
                   child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: _tabController,
-                    children: [
-                      Outlet(),
-                      Outlet(),
-                      Outlet(),
-                      Outlet(),
+                    children: const [
+                      HorizontaleDataTable(),
+                      HorizontaleDataTable(),
+                      HorizontaleDataTable(),
+                      HorizontaleDataTable(),
                     ],
                   ),
                 ),
@@ -433,7 +459,7 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
     );
   }
 
-  customtextfield({
+  Widget customtextfield({
     //required bool click,
     bool editable = true,
     TextEditingController? controller1,
@@ -470,7 +496,7 @@ class _OrderOutletState extends ConsumerState<OrderOutlet>
     );
   }
 
-  customCheckBox({
+  Widget customCheckBox({
     String? text,
   }) {
     return Row(

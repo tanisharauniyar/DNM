@@ -1,5 +1,8 @@
+import 'package:dnmm/collection/collection_logic.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +10,7 @@ import '../utills/themes.dart';
 
 class Collection extends ConsumerStatefulWidget {
   final String label;
+
   const Collection({
     super.key,
     required this.label,
@@ -75,24 +79,41 @@ class _CollectionState extends ConsumerState<Collection> {
                   ),
                   child: Column(
                     children: [
-                      textfield(text: formattedDate),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 50.r),
+                              child: Text(
+                                "Today :",
+                                style: TextStyle(
+                                  color: Themes.darkGreenHeader,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 70.r,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              flex: 5, child: textfield(text: formattedDate)),
+                        ],
+                      ),
                       30.verticalSpace,
                       textFormField(title: widget.label),
-                      //30.verticalSpace,
-                      // textFormField(
-                      //     title: 'Receipt No.',
-                      //     keyboardType: TextInputType.phone),
                       30.verticalSpace,
                       Customcontainer(text: "Payment Method"),
                       30.verticalSpace,
-                      if (showCashFields == true) ...[
+                      if (ref.watch(colleectionLogic).paymentMethod ==
+                          "cash") ...[
                         textFormField(
                             title: 'Enter Amount',
                             keyboardType: TextInputType.phone),
                         30.verticalSpace,
                         textFormField(title: 'Remarks'),
                       ],
-                      if (showChequeFields == true) ...[
+                      if (ref.watch(colleectionLogic).paymentMethod ==
+                          "cheque") ...[
                         textFormField(
                             title: 'Cheque Clearance Date',
                             keyboardType: TextInputType.phone),
@@ -126,12 +147,15 @@ class _CollectionState extends ConsumerState<Collection> {
     );
   }
 
-  textfield({
+  Widget textfield({
     TextEditingController? controller1,
     String? text,
   }) {
     return Padding(
-      padding: EdgeInsets.only(left: 250.r, right: 60.r),
+      padding: EdgeInsets.only(
+        left: 250.r,
+        right: 60.r,
+      ),
       child: Container(
         height: 130.r,
         width: 900.w,
@@ -159,7 +183,7 @@ class _CollectionState extends ConsumerState<Collection> {
     );
   }
 
-  textFormField({
+  Widget textFormField({
     String? title,
     String? hintxt,
     TextEditingController? controller,
@@ -188,13 +212,10 @@ class _CollectionState extends ConsumerState<Collection> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 30.sp),
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Themes.darkPrimaryColor,
-                width: 5.r,
-              ),
+              color: Themes.iconColor.withOpacity(0.2),
               borderRadius: BorderRadius.circular(20.r),
             ),
-            height: 130.r,
+            height: 150.r,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -225,7 +246,7 @@ class _CollectionState extends ConsumerState<Collection> {
     );
   }
 
-  Customcontainer({String? text}) {
+  Widget Customcontainer({String? text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -247,14 +268,11 @@ class _CollectionState extends ConsumerState<Collection> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 2.r, horizontal: 26.r),
             child: Container(
-              height: 140.r,
+              height: 150.r,
               width: 1020.r,
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: Themes.darkPrimaryColor,
-                  width: 5.r,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20.r)),
+                color: Themes.iconColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Padding(
                 padding: EdgeInsets.all(45.r),
@@ -280,10 +298,9 @@ class _CollectionState extends ConsumerState<Collection> {
           title: Text(
             "Select Payment Method",
             style: TextStyle(
-              fontSize: 70.r,
-              fontWeight: FontWeight.bold,
-              color: Themes.darkGreenHeader,
-            ),
+                fontSize: 70.r,
+                fontWeight: FontWeight.bold,
+                color: Themes.defaultGreenColor),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -298,17 +315,19 @@ class _CollectionState extends ConsumerState<Collection> {
                   ),
                 ),
                 onTap: () {
-                  setState(() {
-                    paymentMethod = "Cash";
-                    showChequeFields = false; // Show Cheque fields
-                    showCashFields = true;
-                  });
+                  ref.read(colleectionLogic).togglePaymentOptions("cash");
+
+                  // setState(() {
+                  //   paymentMethod = "Cash";
+                  //   showChequeFields = false; // Show Cheque fields
+                  //   showCashFields = true;
+                  // });
                   Navigator.pop(context);
                 },
                 leading: Icon(
                   Icons.money,
                   size: 100.r,
-                  color: Themes.primaryColor,
+                  color: Themes.iconColor,
                 ),
               ),
               ListTile(
@@ -321,17 +340,18 @@ class _CollectionState extends ConsumerState<Collection> {
                   ),
                 ),
                 onTap: () {
-                  setState(() {
-                    paymentMethod = "Cheque";
-                    showChequeFields = true; // Show Cheque fields
-                    showCashFields = false;
-                  });
+                  ref.read(colleectionLogic).togglePaymentOptions("cheque");
+                  // setState(() {
+                  //   paymentMethod = "Cheque";
+                  //   showChequeFields = true; // Show Cheque fields
+                  //   showCashFields = false;
+                  // });
                   Navigator.pop(context);
                 },
                 leading: Icon(
                   Icons.monitor_heart_sharp,
                   size: 100.r,
-                  color: Themes.primaryColor,
+                  color: Themes.iconColor,
                 ),
               ),
             ],

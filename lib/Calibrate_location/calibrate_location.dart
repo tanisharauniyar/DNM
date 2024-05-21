@@ -68,7 +68,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   saveLocation() {
-    savedLocation = googleplex;
+    savedLocation = LatLng(27.69, 85.39);
     calculateDistance();
     setState(() {
       isSnackBarVisible = true;
@@ -136,7 +136,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ? {
                         Marker(
                           markerId: const MarkerId('Current location'),
-                          position: googleplex!,
+                          position: savedLocation!,
                           icon: BitmapDescriptor.defaultMarker,
                           infoWindow: const InfoWindow(
                             title: 'Your Location',

@@ -1,8 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../utills/themes.dart';
 
 final AddOutletLogic = ChangeNotifierProvider<addoutletLogic>((ref) {
   return addoutletLogic();
@@ -15,7 +19,9 @@ class addoutletLogic extends ChangeNotifier {
   String? selectedType;
   String? selectedClass;
   String? selectGender;
+  String? selectGendername;
   bool ischecked = false;
+  bool isclicked = false;
   final ImagePicker imagePicker = ImagePicker();
   var outletName = TextEditingController();
   var contactNumber = TextEditingController();
@@ -26,8 +32,14 @@ class addoutletLogic extends ChangeNotifier {
   var selectDistributor = TextEditingController();
   var PrimaryContactName = TextEditingController();
   var Designation = TextEditingController();
+  var primarycontacenumber = TextEditingController();
+  List<Map<String, dynamic>> secContact = [];
 
-  List popupContainers = [];
+  Map<String, dynamic> primaryContact = {
+    "name": "",
+    "number": "",
+    "designation": ""
+  };
 
   List<String> groups = [
     'Kathmandu',
@@ -49,6 +61,10 @@ class addoutletLogic extends ChangeNotifier {
     'Mr.',
     'Mrs.',
   ];
+  List<String> Gender = [
+    'Mr.',
+    'Mrs.',
+  ];
 
   setGroup(String? group) {
     selectedGroup = group;
@@ -57,6 +73,11 @@ class addoutletLogic extends ChangeNotifier {
 
   setGender(String? gender) {
     selectGender = gender;
+    notifyListeners();
+  }
+
+  setGendername(String? gender) {
+    selectGendername = gender;
     notifyListeners();
   }
 
@@ -116,9 +137,23 @@ class addoutletLogic extends ChangeNotifier {
     notifyListeners();
   }
 
-  hidePopupContainer() {
-    if (popupContainers.isNotEmpty) {
-      popupContainers.removeLast();
+  ShowContainer() {
+    isclicked = !isclicked;
+    notifyListeners();
+  }
+
+  addSecondary() {
+    secContact.add({
+      "name": TextEditingController(),
+      "number": TextEditingController(),
+      "designation": TextEditingController(),
+    });
+    notifyListeners();
+  }
+
+  hidePopupContainer(index) {
+    if (secContact.isNotEmpty) {
+      secContact.removeAt(index);
     }
     notifyListeners();
   }

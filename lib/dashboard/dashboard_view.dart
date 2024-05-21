@@ -61,6 +61,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
                       childAspectRatio: 300 / 340),
                   itemBuilder: (BuildContext context, int index) {
                     return buildCategoryItemsTile(
+                        data: ref.watch(dashboardLogic).dataList[index],
                         icon: ref.watch(dashboardLogic).dataList[index].icon,
                         title: ref.watch(dashboardLogic).dataList[index].name,
                         route:
@@ -75,55 +76,23 @@ class _DashboardState extends ConsumerState<Dashboard> {
     );
   }
 
-  // getImages(String title) {
-  //   switch (title.toLowerCase()) {
-  //     case "Profile":
-  //       return FaIcon(FontAwesomeIcons.peopleRoof);
-  //     case "Visit Plan":
-  //       return FaIcon(FontAwesomeIcons.peopleRoof);
-  //     case "Add outlet":
-  //       return FaIcon(Icons.sports_cricket);
-  //     case "Order Booking":
-  //       return FaIcon(FontAwesomeIcons.bicycle);
-  //     case "Sales Return":
-  //       return FaIcon(FontAwesomeIcons.volleyball);
-  //     case "UPdate Market Status":
-  //       return FaIcon(FontAwesomeIcons.tshirt);
-  //     case "A/C  Statement":
-  //       return FaIcon(FontAwesomeIcons.tshirt);
-  //     case "closing Stock":
-  //       return FaIcon(FontAwesomeIcons.tshirt);
-  //   }
-  // }
-
   buildCategoryItemsTile({
+    required CategoryModel data,
     required IconData? icon,
     required String? title,
     required route,
   }) {
     return InkWell(
       onTap: () {
-        final dialogRoutes =
-            ref.watch(dashboardLogic).titlesToShowDialog[title];
-        if (dialogRoutes != null) {
+        if (data.routeData.isNotEmpty) {
           showDialogBox(
-            ontap: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => dialogRoutes!['Distributor']!,
-                  ));
-            },
-            ontapp: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => dialogRoutes['Outlet']!));
-            },
+            items: data.routeData,
           );
         } else {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => route));
+            context,
+            MaterialPageRoute(builder: (context) => data.route!),
+          );
         }
       },
       child: Padding(
@@ -174,62 +143,61 @@ class _DashboardState extends ConsumerState<Dashboard> {
         ),
       ),
     );
+    //);
   }
 
   showDialogBox({
-    required Function ontap,
-    required Function ontapp,
+    required List<Map> items,
   }) {
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Select Context',
-            style: TextStyle(
-              fontSize: 70.r,
-              fontWeight: FontWeight.bold,
-              color: Themes.darkGreenHeader,
+        return Container(
+          height: 790.r,
+          width: 150.r,
+          child: AlertDialog(
+            title: Text(
+              'Select Context',
+              style: TextStyle(
+                fontSize: 70.r,
+                fontWeight: FontWeight.bold,
+                color: Themes.darkGreenHeader,
+              ),
             ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                ListTile(
-                    leading: Icon(
-                      Icons.dangerous_outlined,
-                      size: 100.r,
-                      color: Themes.primaryColor,
-                    ),
-                    title: Text(
-                      'Distributor',
-                      style: TextStyle(
-                        fontSize: 70.r,
-                        fontWeight: FontWeight.bold,
-                        color: Themes.darkPrimaryColor,
+            content: Container(
+              height: 600.r,
+              child: Column(
+                children: [
+                  for (var item in items)
+                    Container(
+                      width: 550.r,
+                      height: 200.r,
+                      child: ListTile(
+                        leading: Icon(
+                          item['icon'],
+                          size: 80.r,
+                          color: Themes.primaryColor,
+                        ),
+                        title: Text(
+                          item['name'],
+                          style: TextStyle(
+                            fontSize: 70.r,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => item['route']));
+                        },
                       ),
                     ),
-                    onTap: () {
-                      ontap();
-                    }),
-                ListTile(
-                    leading: Icon(
-                      Icons.outbond_outlined,
-                      size: 100.r,
-                      color: Themes.primaryColor,
-                    ),
-                    title: Text(
-                      'OutLet',
-                      style: TextStyle(
-                        fontSize: 70.r,
-                        fontWeight: FontWeight.bold,
-                        color: Themes.darkPrimaryColor,
-                      ),
-                    ),
-                    onTap: () {
-                      ontapp();
-                    }),
-              ],
+                ],
+              ),
             ),
           ),
         );

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../Calibrate_location/outlet.dart';
+import '../utills/HorizontalTable.dart';
 import '../utills/themes.dart';
 import 'order_booking_logic.dart';
 
@@ -40,7 +40,7 @@ class _OrderBookingState extends ConsumerState<Order>
       child: Container(
         color: Colors.white,
         child: Scaffold(
-          backgroundColor: Themes.defaultGreenColor.withOpacity(0.1),
+          // backgroundColor: Themes.defaultGreenColor.withOpacity(0.3),
           appBar: AppBar(
             leading: InkWell(
               onTap: () {
@@ -72,78 +72,89 @@ class _OrderBookingState extends ConsumerState<Order>
               )
             ],
           ),
-          body: Column(
-            children: [
-              50.verticalSpace,
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 70.r),
-                    child: Text(
-                      //widget.text,
-                      "Remarks :",
-                      style: TextStyle(
-                        color: Themes.darkGreenHeader,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 70.r,
-                      ),
-                    ),
+          body: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.r),
+            child: Column(
+              children: [
+                20.verticalSpace,
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
-                  20.horizontalSpace,
-                  customtextfield(
-                    onUpdate: () {},
-                  )
-                ],
-              ),
-              100.verticalSpace,
-              Container(
-                child: DefaultTabController(
-                  length: ref.watch(orderbookingLogic).TabsTitle.length,
-                  child: TabBar(
-                    // isScrollable: false,
-                    controller: _tabController,
-                    indicator: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Themes.darkGreenHeader,
-                          width: 10.r,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 40.r),
+                        child: Text(
+                          "Remarks :",
+                          style: TextStyle(
+                            color: Themes.darkGreenHeader,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 70.r,
+                          ),
                         ),
                       ),
+                      20.horizontalSpace,
+                      Expanded(
+                        child: customtextfield(
+                          onUpdate: () {},
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                50.verticalSpace,
+                Container(
+                  child: DefaultTabController(
+                    length: ref.watch(orderbookingLogic).TabsTitle.length,
+                    child: TabBar(
+                      // isScrollable: false,
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.r),
+                        border: Border.all(
+                          color: Themes.darkGreenHeader,
+                          width: 4.r,
+                        ),
+                      ),
+                      labelColor: Themes.darkGreenHeader,
+                      unselectedLabelColor: Colors.black,
+
+                      labelStyle: TextStyle(fontSize: 45.r),
+                      tabs: const [
+                        Tab(text: "GIN"),
+                        Tab(text: "VODKA"),
+                        Tab(text: "WHISKEY"),
+                        Tab(text: "SCOTCH"),
+                      ],
                     ),
-                    labelColor: Themes.darkGreenHeader,
-                    unselectedLabelColor: Colors.black,
-                    labelStyle: TextStyle(fontSize: 50.r),
-                    tabs: const [
-                      Tab(text: "GIN"),
-                      Tab(text: "VODKA"),
-                      Tab(text: "WHISKEY"),
-                      Tab(text: "SCOTCH"),
-                    ],
                   ),
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  child: TabBarView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    controller: _tabController,
-                    children: const [
-                      Outlet(),
-                      Outlet(),
-                      Outlet(),
-                      Outlet(),
-                    ],
+                20.verticalSpace,
+                Flexible(
+                  child: Container(
+                    child: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _tabController,
+                      children: const [
+                        HorizontaleDataTable(),
+                        HorizontaleDataTable(),
+                        HorizontaleDataTable(),
+                        HorizontaleDataTable(),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  CustomTable() {
+  Widget CustomTable() {
     return SingleChildScrollView(
       clipBehavior: Clip.antiAlias,
       scrollDirection: Axis.horizontal,
@@ -353,7 +364,7 @@ class _OrderBookingState extends ConsumerState<Order>
     );
   }
 
-  customtextfield({
+  Widget customtextfield({
     bool editable = true,
     TextEditingController? controller1,
     String? text,
